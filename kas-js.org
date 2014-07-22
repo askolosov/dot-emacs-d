@@ -1,0 +1,13 @@
+#+TITLE: Alexander Kolosov's JS config
+#+OPTIONS: toc:nil num:nil ^:nil
+
+* js2-mode
+
+#+begin_src emacs-lisp
+  (add-to-list 'auto-mode-alist '("\\.js" . js2-mode))
+#+end_src
+
+* Setting offset to 2 spaces
+#+begin_src emacs-lisp
+  (setq js2-basic-offset 2)  
+#+end_src

@@ -1,0 +1,262 @@
+#+TITLE: Alexander Kolosov's Emacs config
+#+OPTIONS: toc:2 num:nil ^:nil
+
+#+begin_quote
+  Emacs outshines all other editing software in approximately the same
+  way that the noonday sun does the stars. It is not just bigger and
+  brighter; it simply makes everything else vanish.
+
+  -- Neal Stephenson, "In the Beginning was the Command Line"
+#+end_quote
+
+* Introduction
+  :PROPERTIES:
+  :CUSTOM_ID: introduction
+  :END:
+This Emacs config is based on the Emacs Starter Kit (http://github.com/eschulte/emacs24-starter-kit/).
+
+* Configuration
+  :PROPERTIES:
+  :CUSTOM_ID: config
+  :END:
+
+** Basics
+- Load path etc.
+  #+name: starter-kit-load-paths
+  #+begin_src emacs-lisp
+    (add-to-list 'load-path starter-kit-dir)
+    (setq autoload-file (concat starter-kit-dir "loaddefs.el"))
+    (setq package-user-dir (concat starter-kit-dir "elpa"))
+    (setq custom-file (concat starter-kit-dir "custom.el"))
+  #+end_src
+
+- Ubiquitous Packages which should be loaded on startup rather than
+  autoloaded on demand since they are likely to be used in every
+  session.
+  #+name: starter-kit-load-on-startup
+  #+begin_src emacs-lisp
+    (require 'cl)
+    (require 'saveplace)
+    (require 'ffap)
+    (require 'uniquify)
+    (require 'ansi-color)
+    (require 'recentf)
+  #+end_src
+
+- ELPA archive repositories and two packages to install by default.
+  #+begin_src emacs-lisp
+    (setq package-archives
+          '(("gnu"         . "http://elpa.gnu.org/packages/")
+            ("original"    . "http://tromey.com/elpa/")
+            ("org"         . "http://orgmode.org/elpa/")
+            ("marmalade"   . "http://marmalade-repo.org/packages/")))
+    (package-initialize)
+    
+    (defvar starter-kit-packages
+      (list 'yasnippet-bundle)
+      "Libraries that should be installed by default.")
+    
+    (unless package-archive-contents
+      (package-refresh-contents))
+    (dolist (package starter-kit-packages)
+      (unless (package-installed-p package)
+        (package-install package)))
+  #+end_src
+
+- Functions for loading other parts of the starter kit
+  #+name: starter-kit-load
+  #+begin_src emacs-lisp
+    (defun starter-kit-load (file &optional header-or-tag)
+      "Load configuration from other starter-kit-*.org files.
+    If the optional argument is the id of a subtree then only
+    configuration from within that subtree will be loaded.  If it is
+    not an id then it will be interpreted as a tag, and only subtrees
+    marked with the given tag will be loaded.
+    
+    For example, to load all of starter-kit-lisp.org simply
+    add (starter-kit-load \"lisp\") to your configuration.
+    
+    To load only the 'window-system' config from
+    starter-kit-misc-recommended.org add
+     (starter-kit-load \"misc-recommended\" \"window-system\")
+    to your configuration."
+      (let ((file (expand-file-name file starter-kit-dir)))
+        (org-babel-load-file
+         (if header-or-tag
+             (let* ((base (file-name-nondirectory file))
+                    (dir  (file-name-directory file))
+                    (partial-file (expand-file-name
+                                   (concat "." (file-name-sans-extension base)
+                                           ".part." header-or-tag ".org")
+                                   dir)))
+               (unless (file-exists-p partial-file)
+                 (with-temp-file partial-file
+                   (insert
+                    (with-temp-buffer
+                      (insert-file-contents file)
+                      (save-excursion
+                        (condition-case nil ;; collect as a header
+                            (progn
+                              (org-link-search (concat"#"header-or-tag))
+                              (org-narrow-to-subtree)
+                              (buffer-string))
+                          (error ;; collect all entries with as tags
+                           (let (body)
+                             (org-map-entries
+                              (lambda ()
+                                (save-restriction
+                                  (org-narrow-to-subtree)
+                                  (setq body (concat body "\n" (buffer-string)))))
+                              header-or-tag)
+                             body))))))))
+               partial-file)
+           file))))
+  #+end_src
+
+- Work around a bug on OS X where system-name is FQDN.
+  #+name: starter-kit-osX-workaround
+  #+begin_src emacs-lisp
+    (if (eq system-type 'darwin)
+        (setq system-name (car (split-string system-name "\\."))))
+  #+end_src
+
+- Starter kit function definitions in [[file:starter-kit-defuns.org][starter-kit-defuns]]
+  #+begin_src emacs-lisp
+  (starter-kit-load "starter-kit-defuns.org")
+  #+end_src
+
+** Core
+   :PROPERTIES:
+   :CUSTOM_ID: core
+   :END:
+
+*** Key Bindings
+  #+begin_src emacs-lisp
+    (starter-kit-load "kas-bindings.org")
+  #+end_src
+
+*** Miscellaneous settings in [[file:starter-kit-misc.org][starter-kit-misc]]
+  #+begin_src emacs-lisp
+  (starter-kit-load "starter-kit-misc.org")
+  #+end_src
+
+# - Registers for jumping to commonly used files in [[file:starter-kit-registers.org][starter-kit-registers]]
+#   #+begin_src emacs-lisp
+#   (starter-kit-load "starter-kit-registers.org")
+#   #+end_src
+
+** Load User/System Specific Files
+*** System/User specific customizations
+You can keep system- or user-specific customizations here in either
+raw emacs-lisp files or as embedded elisp in org-mode files (as done
+in this document).
+
+You can keep elisp source in the =src= directory.  Packages loaded
+from here will override those installed by ELPA.  This is useful if
+you want to track the development versions of a project, or if a
+project is not in elpa.
+
+After we've loaded all the Starter Kit defaults, lets load the User's stuff.
+#+name: starter-kit-load-files
+#+begin_src emacs-lisp
+  (flet ((sk-load (base)
+           (let* ((path          (expand-file-name base starter-kit-dir))
+                  (literate      (concat path ".org"))
+                  (encrypted-org (concat path ".org.gpg"))
+                  (plain         (concat path ".el"))
+                  (encrypted-el  (concat path ".el.gpg")))
+             (cond
+              ((file-exists-p encrypted-org) (org-babel-load-file encrypted-org))
+              ((file-exists-p encrypted-el)  (load encrypted-el))
+              ((file-exists-p literate)      (org-babel-load-file literate))
+              ((file-exists-p plain)         (load plain)))))
+         (remove-extension (name)
+           (string-match "\\(.*?\\)\.\\(org\\(\\.el\\)?\\|el\\)\\(\\.gpg\\)?$" name)
+           (match-string 1 name)))
+    (let ((elisp-dir (expand-file-name "src" starter-kit-dir))
+          (user-dir (expand-file-name user-login-name starter-kit-dir)))
+      ;; add the src directory to the load path
+      (add-to-list 'load-path elisp-dir)
+      ;; load specific files
+      (when (file-exists-p elisp-dir)
+        (let ((default-directory elisp-dir))
+          (normal-top-level-add-subdirs-to-load-path)))
+      ;; load system-specific config
+      (sk-load system-name)
+      ;; load user-specific config
+      (sk-load user-login-name)
+      ;; load any files in the user's directory
+      (when (file-exists-p user-dir)
+        (add-to-list 'load-path user-dir)
+        (mapc #'sk-load
+              (remove-duplicates
+               (mapcar #'remove-extension
+                       (directory-files user-dir t ".*\.\\(org\\|el\\)\\(\\.gpg\\)?$"))
+               :test #'string=)))))
+#+end_src
+
+*** Settings from M-x customize
+#+name: m-x-customize-customizations
+#+begin_src emacs-lisp
+  (load custom-file 'noerror)
+#+end_src
+
+** Org-Mode
+  #+begin_src emacs-lisp
+    (starter-kit-load "kas-org.org")
+  #+end_src
+
+** yasnippet
+
+- [[http://code.google.com/p/yasnippet/][yasnippet]] is yet another snippet expansion system for Emacs.  It is
+  inspired by TextMate's templating syntax.
+  - watch the [[http://www.youtube.com/watch?v=vOj7btx3ATg][video on YouTube]]
+  - see the [[http://yasnippet.googlecode.com/svn/trunk/doc/index.html][intro and tutorial]]
+
+  load the yasnippet bundle
+  #+begin_src emacs-lisp
+    (add-to-list 'load-path
+                 (expand-file-name  "yasnippet"
+                                    (expand-file-name "src"
+                                                      starter-kit-dir)))
+    (require 'yasnippet)
+    (yas/initialize)
+  #+end_src
+
+  load the snippets defined in the =./snippets/= directory
+  #+begin_src emacs-lisp
+    (yas/load-directory (expand-file-name "snippets" starter-kit-dir))
+  #+end_src
+
+  The latest version of yasnippets doesn't play well with Org-mode, the
+  following function allows these two to play nicely together.
+  #+begin_src emacs-lisp
+    (defun yas/org-very-safe-expand ()
+      (let ((yas/fallback-behavior 'return-nil)) (yas/expand)))
+    
+    (defun yas/org-setup ()
+      ;; yasnippet (using the new org-cycle hooks)
+      (make-variable-buffer-local 'yas/trigger-key)
+      (setq yas/trigger-key [MAC])
+      (add-to-list 'org-tab-first-hook 'yas/org-very-safe-expand)
+      (define-key yas/keymap [tab] 'yas/next-field))
+    
+    (add-hook 'org-mode-hook #'yas/org-setup)
+  #+end_src
+
+** Calendar settings
+    #+begin_src emacs-lisp
+      (setq calendar-date-style "european")
+      (setq calendar-week-start-day 1)
+    #+end_src
+
+** Gnus mail client settings
+  #+begin_src emacs-lisp
+    (starter-kit-load "kas-gnus.org")
+  #+end_src
+
+** Comfortable Javascript coding
+  #+begin_src emacs-lisp
+    (starter-kit-load "kas-js.org")
+  #+end_src
+

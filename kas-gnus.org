@@ -1,0 +1,190 @@
+#+TITLE: Alexander Kolosov's Gnus mail reader settings
+#+OPTIONS: toc:nil num:nil ^:nil
+
+* Group parameters
+    #+begin_src emacs-lisp
+      (setq gnus-parameters
+            '(("^nnrss:"
+               (gnus-show-threads nil)
+               (mm-discouraged-alternatives nil))))
+    #+end_src
+   
+* BBDB
+    :PROPERTIES:
+    :CUSTOM_ID: bbdb
+    :END:
+[[http://bbdb.sourceforge.net/][# BBDB]] -- _The Insidious Big Brother Database_ is Emacs' contact manager
+which is very useful for keeping all of your contacts organized for
+use with gnus.
+
+#+begin_src emacs-lisp
+  (require 'bbdb)
+  (require 'bbdb-autoloads)
+  
+  ;; (setq load-path (cons "~/.emacs.d/bbdb/lisp" load-path))
+  ;; (require 'bbdb)
+  ;; (bbdb-initialize)
+  ;; (setq bbdb-north-american-phone-numbers nil)
+  ;; (add-hook 'gnus-startup-hook 'bbdb-insinuate-gnus)
+  
+  (setq
+   bbdb-file "~/.bbdb"
+   bbdb-offer-save 'auto
+   bbdb-notice-auto-save-file t
+   bbdb-expand-mail-aliases t
+   bbdb-canonicalize-redundant-nets-p t
+   bbdb-always-add-addresses t
+   bbdb-complete-name-allow-cycling t
+   bbdb-use-pop-up nil
+   bbdb-pop-up-target-lines 2
+   bbdb-send-mail-style 'message)
+  
+  
+  
+#+end_src
+
+* Summary View
+   - Setup convinient summary format.
+   #+begin_src emacs-lisp
+     (setq gnus-summary-line-format
+           (concat "%U%R %~(pad-right 2)t%* %~(pad-right 2)B%(%[%-20,20f%]%) "
+                   "%~(max-right 90)~(pad-right 90)s %-115=%&user-date;, %k \n"))
+     
+     (setq gnus-user-date-format-alist
+           '(((gnus-seconds-today) . "Сёгодня %H:%M")
+             ((+ 86400 (gnus-seconds-today)) . "Вчера %H:%M")
+             (604800 . "%a %H:%M") ;;that's one week
+     ;;        ((gnus-seconds-month) . "%d.%m")
+             ((gnus-seconds-year) . "%d %b")
+             (t . "%d.%m.%Y"))) ;;this one is used when no other does match
+     
+   #+end_src
+
+#    - Hide all threads when group is just opened.
+#    #+begin_src emacs-lisp
+#      (add-hook 'gnus-summary-mode-hook 'gnus-summary-hide-all-threads)
+#    #+end_src
+
+   - Thread sorting method.
+   #+begin_src emacs-lisp
+     (setq gnus-thread-sort-functions
+           '((not gnus-thread-sort-by-date)
+             gnus-thread-sort-by-total-score))     
+   #+end_src
+
+   - Highlight current cursor line position in the Gnus summary.
+   #+begin_src emacs-lisp
+     (add-hook 'gnus-summary-mode-hook 'hl-line-mode)
+   #+end_src
+
+* Attachments
+   - Set default directory for saving attachments
+ 
+    #+begin_src emacs-lisp
+      (setq mm-default-directory "~/attachments/")
+    #+end_src
+
+   - Don't show html or richtext formatted attachments if plaintext
+     part exists
+
+     #+begin_src emacs-lisp
+       (eval-after-load "mm-decode"
+         '(progn 
+            (add-to-list 'mm-discouraged-alternatives "text/html")
+            (add-to-list 'mm-discouraged-alternatives "text/richtext")))
+     #+end_src
+
+* Cryptography
+   #+begin_src emacs-lisp
+     ;; verify/decrypt only if mml knows about the protocol used
+     (setq mm-verify-option 'known)
+     (setq mm-decrypt-option 'known)
+     
+     (setq gnus-treat-x-pgp-sig t)
+     
+     ;; Tell Gnus not to wait for a request, just display the thing
+     ;; straight away.
+     (eval-after-load "mm-decode"
+       '(add-to-list 'mm-automatic-display "application/pgp$"))
+     
+     ;; Sign output messages
+     (add-hook 'gnus-message-setup-hook 'mml-secure-sign-pgpmime)
+     
+     ;; only encrypt
+     ;;(add-hook 'gnus-message-setup-hook 
+     ;;          (lambda ()
+     ;;            (mml-secure-message-encrypt-pgpmime 1)))
+     
+     
+     ;; Passphrase cache timeout
+     (setq mml2015-cache-passphrase t
+           mml2015-passphrase-cache-expiry '28800)
+     
+     ;; Workaroud for some cryptography problems
+     ;; (add-to-list 'mm-body-charset-encoding-alist '(utf-8 . quoted-printable))
+   #+end_src
+# ** Spam package
+#    #+begin_src emacs-lisp
+#      (require 'spam)
+#      (spam-initialize)
+     
+#      ;; Here I define general anti-spam things
+#      ;; it only say that on exiting all groups matching nnml:private.*,
+#      ;; we launch the spam processor and ham processor (using bogofilter)
+#      (setq spam-junk-mailgroups '("Junk")
+#            spam-split-group "Junk")
+     
+#      (setq nnmail-split-fancy
+#            '(|
+#              (: spam-split)))
+#    #+end_src
+   
+* Autocheck using Gnus demon
+   #+begin_src emacs-lisp
+     (defun gnus-autocheck()
+       (gnus-demon-add-handler 'gnus-demon-scan-news 3 nil))
+     
+     (add-hook 'gnus-started-hook 'gnus-autocheck)
+   #+end_src
+
+* New mail notification
+   #+begin_src emacs-lisp
+     (defun x-urgency-hint (frame set &optional source)
+       "Set urgency hint for `frame' to `set' for `source'."
+       (let* ((wm-hints (append (x-window-property
+                                 "WM_HINTS" frame "WM_HINTS"
+                                 (if source
+                                     source
+                                   (string-to-number
+                                    (frame-parameter frame 'outer-window-id)))
+                                 nil t)
+                                nil))
+              (flags (car wm-hints)))
+         (setcar wm-hints
+                 (if set
+                     (logior flags #x00000100)
+                   (logand flags #xFFFFFEFF)))
+         (x-change-window-property "WM_HINTS" wm-hints frame "WM_HINTS" 32 t)))
+     
+     (require 'gnus-notifications)
+     (defvar cofi--gnus-frame nil)
+     (add-hook 'gnus-started-hook (lambda () (setq cofi--gnus-frame (selected-frame))))
+     (defun cofi/set-mail-urgency ()
+       "Set urgency hint for frame most recently showing gnus."
+       (loop for (group . rest) in gnus-newsrc-alist
+             when (and (<= (gnus-group-level group) gnus-notifications-minimum-level)
+                       (let ((unread (gnus-group-unread group)))
+                         (and (numberp unread)
+                              (> unread 0))))
+     
+             do (prog1
+                    (x-urgency-hint (if (frame-live-p cofi--gnus-frame)
+                                        cofi--gnus-frame
+                                      (setq cofi--gnus-frame nil)
+                                      (selected-frame))
+                                    t)
+                  (return))))
+     
+     (add-hook 'gnus-started-hook #'cofi/set-mail-urgency)
+     (add-hook 'gnus-after-getting-new-news-hook #'cofi/set-mail-urgency)
+   #+end_src

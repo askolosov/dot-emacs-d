@@ -188,3 +188,8 @@ use with gnus.
      (add-hook 'gnus-started-hook #'cofi/set-mail-urgency)
      (add-hook 'gnus-after-getting-new-news-hook #'cofi/set-mail-urgency)
    #+end_src
+* User specific mail settings (mailboxes, SMTP-servers, signatures, etc.)
+  #+begin_src emacs-lisp
+    (starter-kit-load "kas-mailboxes.org")
+  #+end_src
+

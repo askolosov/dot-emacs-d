@@ -1,0 +1,60 @@
+#+TITLE: Gnus mailboxes definition
+#+OPTIONS: toc:nil num:nil ^:nil
+
+* General sender info
+   Specifying my full name and email address, that will be inserted in
+   the message:
+
+   #+begin_src emacs-lisp 
+     (setq user-full-name "Alexander Kolosov")
+     (setq user-mail-address "akolosov@cs.petrsu.ru")
+   #+end_src
+
+   Don't show sender of my own messages in the summary 
+   #+begin_src emacs-lisp 
+     (setq gnus-ignored-from-addresses
+           "Alexander Kolosov")
+   #+end_src
+
+* News groups / Mailboxes / Local folders
+** CS
+    Authentication info is in =~/.authinfo=
+    #+begin_src emacs-lisp 
+      (setq gnus-select-method '(nnimap "cs"
+                                        (nnimap-address "mail.cs.karelia.ru")
+                                        (nnimap-server-port 993)
+                                        (nnimap-stream ssl)))
+    #+end_src
+    
+** Sent-mail
+    - Using remote IMAP foler for sent mail:
+      #+begin_src emacs-lisp
+        (setq gnus-message-archive-group "nnimap:sent-mail")
+      #+end_src
+
+    - Setting up a local archive folder for sent mail (not used now):
+      #+begin_src emacs-lisp 
+        ;;(setq gnus-message-archive-group "sent-mail")
+        
+        ;; (setq gnus-update-message-archive-method t)
+        
+        ;; (setq gnus-message-archive-method
+        ;;       '(nnfolder "archive" 
+        ;;                  (nnfolder-inhibit-expiry t)
+        ;;                  (nnfolder-active-file "~/Mail/archive/active")
+        ;;                  (nnfolder-directory "~/Mail/archive/")
+        ;;                  (nnfolder-get-new-mail nil)))
+      #+end_src
+    
+* Sending mail
+  Use cs mail server to send mail
+
+  #+begin_src emacs-lisp
+    (require 'smtpmail)
+    
+    (setq send-mail-function 'smtpmail-send-it)
+    (setq message-send-mail-function 'smtpmail-send-it) ; if you use message/Gnus
+    (setq smtpmail-default-smtp-server "mail.cs.karelia.ru")
+    (setq smtpmail-local-domain "cs.petrsu.ru")
+    (setq smtpmail-sendto-domain "cs.petrsu.ru")
+  #+end_src

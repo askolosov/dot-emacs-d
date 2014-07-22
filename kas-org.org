@@ -145,10 +145,12 @@ Switch on Org-babel Clojure support.
   (require 'ob-clojure)
 #+end_src
 
-* Org-Jira
+* Org-Jira 
+  To use this feature install =org-jira= to =src= and 
+  uncomment following lines
 #+begin_src emacs-lisp
-  (setq jiralib-url "http://jira.zerobugs.co")
-  (require 'org-jira)
+;  (setq jiralib-url "http://jira.zerobugs.co")
+;  (require 'org-jira)
 #+end_src
 
 * Latex export

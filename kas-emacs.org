@@ -260,3 +260,9 @@ After we've loaded all the Starter Kit defaults, lets load the User's stuff.
     (starter-kit-load "kas-js.org")
   #+end_src
 
+** Look'n'Feel customizations
+*** Tool bar is needless
+    It might also be set in .Xdefaults using Emacs.toolBar: 0
+#+begin_src emacs-lisp 
+  (tool-bar-mode 0)
+#+end_src

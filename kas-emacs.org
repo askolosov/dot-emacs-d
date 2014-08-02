@@ -145,6 +145,16 @@ This Emacs config is based on the Emacs Starter Kit (http://github.com/eschulte/
 #   (starter-kit-load "starter-kit-registers.org")
 #   #+end_src
 
+** Check Dependencies
+
+Determine whether required packages are installed. If not, use ELPA to
+install them. Other dependencies are provided by Emacs 24.
+#+begin_src emacs-lisp
+  (dolist (package '(yaml-mode js2-mode org-plus-contrib))
+    (unless (package-installed-p package)
+      (package-install package)))
+#+end_src
+
 ** Load User/System Specific Files
 *** System/User specific customizations
 You can keep system- or user-specific customizations here in either

@@ -4,7 +4,7 @@
 * js2-mode
 
 #+begin_src emacs-lisp
-  (add-to-list 'auto-mode-alist '("\\.js" . js2-mode))
+  (add-to-list 'auto-mode-alist '("\\.js\\(on\\)?$" . js2-mode))
 #+end_src
 
 * Setting offset to 2 spaces

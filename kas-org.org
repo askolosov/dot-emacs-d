@@ -112,7 +112,7 @@ file using the `org-babel-lob-ingest' function.
     (setq org-timer-default-timer 25)
   #+end_src
 
-  Whan I clock-in a task, the timer starts with the default unless a timer is already underway:
+  When I clock-in a task, the timer starts with the default unless a timer is already underway:
   #+begin_src emacs-lisp
     (add-hook 'org-clock-in-hook' (lambda () 
                                     (org-timer-set-timer '(16))))
@@ -177,3 +177,15 @@ Switch on Org-babel Clojure support.
   (setq org-latex-pdf-process
         '("latexmk -f -pdf %f"))
 #+end_src
+* List of my Agenda org-files
+#+begin_src emacs-lisp 
+  (setq org-agenda-files (list "~/org/cs.org"
+                               "~/org/teaching.org"
+                               "~/org/nest.org"
+                               ;; "~/org/moonlighting.org"
+                               "~/org/memos.org"
+                               "~/org/thesis.org"
+                               "~/org/home.org"))
+
+#+end_src
+   

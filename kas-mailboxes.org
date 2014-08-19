@@ -6,8 +6,16 @@
    the message:
 
    #+begin_src emacs-lisp 
-     (setq user-full-name "Alexander Kolosov")
-     (setq user-mail-address "akolosov@cs.petrsu.ru")
+     (setq gnus-posting-styles
+           '(
+             ;; Default
+             (".*" 
+              (name "Alexander Kolosov")
+              (address "akolosov@cs.petrsu.ru"))
+
+             ;; GMail
+             (".*gmail.*"
+              (address "akolosov@gmail.com"))))
    #+end_src
 
    Don't show sender of my own messages in the summary 
@@ -25,6 +33,15 @@
                                         (nnimap-server-port 993)
                                         (nnimap-stream ssl)))
     #+end_src
+    
+** GMail
+    #+begin_src emacs-lisp 
+      (add-to-list 'gnus-secondary-select-methods '(nnimap "gmail"
+                                                           (nnimap-address "imap.gmail.com") 
+                                                           (nnimap-server-port 993)
+                                                           (nnimap-stream ssl)))
+    #+end_src
+
     
 ** Sent-mail
     - Using remote IMAP foler for sent mail:
@@ -51,7 +68,7 @@
 
   #+begin_src emacs-lisp
     (require 'smtpmail)
-    
+
     (setq send-mail-function 'smtpmail-send-it)
     (setq message-send-mail-function 'smtpmail-send-it) ; if you use message/Gnus
     (setq smtpmail-default-smtp-server "mail.cs.karelia.ru")

@@ -37,11 +37,52 @@ use with gnus.
    bbdb-complete-name-allow-cycling t
    bbdb-use-pop-up nil
    bbdb-pop-up-target-lines 2
-   bbdb-send-mail-style 'message)
-  
-  
-  
+   bbdb-send-mail-style 'message)   
 #+end_src
+
+** Using local LDAP for email address autocompletion (when we are in CS dept.)
+*** LDAP access parameters
+    #+begin_src emacs-lisp
+      (setq ldap-host-parameters-alist '(("ldap.cs.prv" 
+                                          base "dc=cs,dc=karelia,dc=ru")))
+
+      (setq ldap-ldapsearch-args (quote ("-tt" "-LLL" "-x" "-Z")))
+    #+end_src
+
+*** EUDC configuration for LDAP+BBDB
+
+     #+begin_src emacs-lisp
+       (require 'eudc)
+
+       (setq eudc-default-return-attributes nil
+             eudc-strict-return-matches nil)
+
+       (eudc-set-server "localhost" 'bbdb t)
+       (setq eudc-server-hotlist '(("localhost" . bbdb)))
+       (if (getenv "CS_PETRSU")
+           (add-to-list 'eudc-server-hotlist
+                        '("ldap.cs.prv" . ldap)))
+
+       (setq eudc-inline-expansion-servers 'hotlist)
+
+       (eudc-protocol-set 'eudc-inline-expansion-format '("%s <%s@cs.petrsu.ru>" gecos uid)
+                          'ldap)
+
+       (eudc-protocol-set 'eudc-inline-query-format '((uid)
+                                                      (sn))
+                          'ldap)
+
+
+       (eudc-protocol-set 'eudc-inline-expansion-format '("%s %s <%s>" firstname lastname net)
+                          'bbdb)
+
+       (eudc-protocol-set 'eudc-inline-query-format '((name)
+                                                      (firstname)
+                                                      (lastname)
+                                                      (firstname lastname)
+                                                      (net))
+                          'bbdb)
+     #+end_src
 
 * Summary View
    - Setup convinient summary format.

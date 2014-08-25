@@ -72,6 +72,4 @@
     (setq send-mail-function 'smtpmail-send-it)
     (setq message-send-mail-function 'smtpmail-send-it) ; if you use message/Gnus
     (setq smtpmail-default-smtp-server "mail.cs.karelia.ru")
-    (setq smtpmail-local-domain "cs.petrsu.ru")
-    (setq smtpmail-sendto-domain "cs.petrsu.ru")
   #+end_src

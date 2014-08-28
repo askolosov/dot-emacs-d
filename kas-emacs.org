@@ -211,6 +211,17 @@ After we've loaded all the Starter Kit defaults, lets load the User's stuff.
   (load custom-file 'noerror)
 #+end_src
 
+** Calendar settings
+    #+begin_src emacs-lisp
+      (setq calendar-date-style 'european)
+      (setq european-calendar-style t)
+      (setq calendar-week-start-day 1)
+      (add-hook 'calendar-load-hook
+                (lambda ()
+                  (calendar-set-date-style 'european)))
+      
+    #+end_src
+
 ** Org-Mode
   #+begin_src emacs-lisp
     (starter-kit-load "kas-org.org")
@@ -253,12 +264,6 @@ After we've loaded all the Starter Kit defaults, lets load the User's stuff.
     
     (add-hook 'org-mode-hook #'yas/org-setup)
   #+end_src
-
-** Calendar settings
-    #+begin_src emacs-lisp
-      (setq calendar-date-style "european")
-      (setq calendar-week-start-day 1)
-    #+end_src
 
 ** Gnus mail client settings
   #+begin_src emacs-lisp

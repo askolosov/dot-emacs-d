@@ -5,6 +5,8 @@
 ;; This is the first thing to get loaded.
 ;;
 
+(package-initialize)
+
 ;; load the starter kit from the `after-init-hook' so all packages are loaded
 (add-hook 'after-init-hook
  `(lambda ()

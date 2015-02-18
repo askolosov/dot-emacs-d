@@ -184,7 +184,7 @@ Switch on Org-babel Clojure support.
                                "~/org/nest.org"
                                ;; "~/org/moonlighting.org"
                                "~/org/memos.org"
-                               "~/org/researshes.org"
+                               "~/org/researches.org"
                                "~/org/home.org"))
 
 #+end_src

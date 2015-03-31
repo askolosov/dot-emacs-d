@@ -14,8 +14,12 @@
               (address "akolosov@cs.petrsu.ru"))
 
              ;; GMail
-             (".*gmail.*"
-              (address "akolosov@gmail.com"))))
+             ("gmail"
+              (address "akolosov@gmail.com"))
+             
+             ;; kolosov.xyz
+             ("xyz"
+              (address "alexander@kolosov.xyz"))))
    #+end_src
 
    Don't show sender of my own messages in the summary 
@@ -42,7 +46,14 @@
                                                            (nnimap-stream ssl)))
     #+end_src
 
-    
+** kolosov.xyz
+    #+begin_src emacs-lisp 
+      (add-to-list 'gnus-secondary-select-methods '(nnimap "xyz"
+                                                           (nnimap-address "mail.kolosov.xyz") 
+                                                           (nnimap-server-port 993)
+                                                           (nnimap-stream ssl)))
+    #+end_src
+
 ** Sent-mail
     - Using remote IMAP foler for sent mail:
       #+begin_src emacs-lisp

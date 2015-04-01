@@ -1,7 +1,7 @@
 #+TITLE: Gnus mailboxes definition
 #+OPTIONS: toc:nil num:nil ^:nil
 
-* General sender info
+* Posting styles
    Specifying my full name and email address, that will be inserted in
    the message:
 
@@ -15,11 +15,15 @@
 
              ;; GMail
              ("gmail"
-              (address "akolosov@gmail.com"))
+              (address "akolosov@gmail.com")
+              ("X-SMTP-Server" "smtp.gmail.com")
+              ("X-SMTP-Service" "587"))
              
              ;; kolosov.xyz
              ("xyz"
-              (address "alexander@kolosov.xyz"))))
+              (address "alexander@kolosov.xyz")
+              ("X-SMTP-Server" "mail.kolosov.xyz")
+              ("X-SMTP-Service" "587"))))
    #+end_src
 
    Don't show sender of my own messages in the summary 
@@ -75,12 +79,8 @@
       #+end_src
     
 * Sending mail
-  Use cs mail server to send mail
+  Use CS dept. SMTP-server as a default.
 
   #+begin_src emacs-lisp
-    (require 'smtpmail)
-
-    (setq send-mail-function 'smtpmail-send-it)
-    (setq message-send-mail-function 'smtpmail-send-it) ; if you use message/Gnus
     (setq smtpmail-default-smtp-server "mail.cs.karelia.ru")
   #+end_src

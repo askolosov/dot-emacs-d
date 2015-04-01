@@ -229,6 +229,41 @@ use with gnus.
      (add-hook 'gnus-started-hook #'cofi/set-mail-urgency)
      (add-hook 'gnus-after-getting-new-news-hook #'cofi/set-mail-urgency)
    #+end_src
+* Sending mail
+
+  Use `smtpmail` to send email via SMTP.
+  
+  #+begin_src emacs-lisp  
+    (require 'smtpmail)
+
+    (setq send-mail-function 'smtpmail-send-it)
+    (setq message-send-mail-function 'smtpmail-send-it) ; if you use message/Gnus
+  #+end_src
+
+  Choose SMTP-server on the basis of =X-SMTP-Server= header, which is
+  set on posting styles. In the absence of the header use default SMTP
+  server.
+
+  #+begin_src emacs-lisp
+    (eval-after-load "smtpmail"
+      '(progn
+         (defadvice smtpmail-via-smtp (around set-smtp-server-from-header activate)
+           (let ((smtpmail-smtp-server (or 
+                                        (save-restriction
+                                          (message-narrow-to-headers)
+                                          (mail-fetch-field "X-SMTP-Server"))
+                                        smtpmail-default-smtp-server))
+                 (smtpmail-smtp-service (or 
+                                         (save-restriction
+                                           (message-narrow-to-headers)
+                                           (mail-fetch-field "X-SMTP-Service"))
+                                         25)))
+             (message-remove-header "X-SMTP-Server")
+             (message-remove-header "X-SMTP-Service")
+             ad-do-it
+             ))))
+  #+end_src
+  
 * User specific mail settings (mailboxes, SMTP-servers, signatures, etc.)
   #+begin_src emacs-lisp
     (starter-kit-load "kas-mailboxes.org")

@@ -265,6 +265,13 @@ After we've loaded all the Starter Kit defaults, lets load the User's stuff.
     (add-hook 'org-mode-hook #'yas/org-setup)
   #+end_src
 
+** FlySpell settings
+   - Use aspell instead of ispell
+     #+begin_src emacs-lisp
+       (setq ispell-list-command "--list")
+       (setq ispell-program-name "aspell")
+     #+end_src
+
 ** Gnus mail client settings
   #+begin_src emacs-lisp
     (starter-kit-load "kas-gnus.org")

@@ -6,7 +6,9 @@
       (setq gnus-parameters
             '(("^nnrss:"
                (gnus-show-threads nil)
-               (mm-discouraged-alternatives nil))))
+               (mm-discouraged-alternatives nil)
+               (gnus-summary-line-format (concat "%U%R %* "
+                                                 "%~(max-right 95)~(pad-right 95)s %-105=%&user-date;\n")))))
     #+end_src
    
 * BBDB
@@ -89,7 +91,7 @@ use with gnus.
    #+begin_src emacs-lisp
      (setq gnus-summary-line-format
            (concat "%U%R %~(pad-right 2)t%* %~(pad-right 2)B%(%[%-20,20f%]%) "
-                   "%~(max-right 90)~(pad-right 90)s %-115=%&user-date;, %k \n"))
+                   "%~(max-right 90)~(pad-right 90)s %-110=%&user-date;, %k \n"))
      
      (setq gnus-user-date-format-alist
            '(((gnus-seconds-today) . "Сёгодня %H:%M")

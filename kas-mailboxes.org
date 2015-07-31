@@ -32,6 +32,14 @@
            "Alexander Kolosov")
    #+end_src
 
+   Don't use my email in the 'To' header of replies to my own messages
+   #+begin_src emacs-lisp 
+     (setq message-dont-reply-to-names
+           '("akolosov@cs"
+             "alexander@kolosov.xyz"))
+   #+end_src
+
+
 * News groups / Mailboxes / Local folders
 ** CS
     Authentication info is in =~/.authinfo=

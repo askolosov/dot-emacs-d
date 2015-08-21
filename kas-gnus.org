@@ -266,6 +266,18 @@ use with gnus.
              ))))
   #+end_src
   
+* Topic grouping of groups
+  - Enable topic mode
+  #+begin_src emacs-lisp  
+    (add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
+  #+end_src
+
+  - Hide all empty topics
+  #+begin_src emacs-lisp  
+    (setq gnus-topic-display-empty-topics nil)
+  #+end_src
+
+  
 * User specific mail settings (mailboxes, SMTP-servers, signatures, etc.)
   #+begin_src emacs-lisp
     (starter-kit-load "kas-mailboxes.org")

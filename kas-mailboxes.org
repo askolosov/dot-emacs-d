@@ -69,7 +69,10 @@
 ** Sent-mail
     - Using remote IMAP foler for sent mail:
       #+begin_src emacs-lisp
-        (setq gnus-message-archive-group "nnimap:sent-mail")
+        (setq gnus-message-archive-group
+              '(("xyz" "nnimap+xyz:Sent")
+                (".*" "nnimap:sent-mail")))
+
       #+end_src
 
     - Setting up a local archive folder for sent mail (not used now):

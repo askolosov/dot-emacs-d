@@ -12,18 +12,17 @@
              (".*" 
               (name "Alexander Kolosov")
               (address "akolosov@cs.petrsu.ru"))
-
-             ;; GMail
-             ("gmail"
-              (address "akolosov@gmail.com")
-              ("X-SMTP-Server" "smtp.gmail.com")
-              ("X-SMTP-Service" "587"))
              
              ;; kolosov.xyz
              ("xyz"
               (address "alexander@kolosov.xyz")
               ("X-SMTP-Server" "mail.kolosov.xyz")
-              ("X-SMTP-Service" "587"))))
+              ("X-SMTP-Service" "587"))
+
+             ;; If in folder for GMail forwards
+             ("xyz:gmail"
+              (address "akolosov@gmail.com")
+              ("Reply-To" "alexander@kolosov.xyz"))))
    #+end_src
 
    Don't show sender of my own messages in the summary 
@@ -39,6 +38,18 @@
              "alexander@kolosov.xyz"))
    #+end_src
 
+   Use 'To' address as 'From' in reply messages
+   #+begin_src emacs-lisp 
+     (setq message-alternative-emails
+           (concat "\\("
+                   "akolosov@gmail\\.com"
+                   "\\|"
+                   "alexander\\+.+@kolosov\\.xyz"
+                   "\\|"
+                   "as@kolosov\\.xyz"
+                   "\\)"))
+   #+end_src
+   
 
 * News groups / Mailboxes / Local folders
 ** CS

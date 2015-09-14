@@ -4,7 +4,7 @@
 * Group parameters
     #+begin_src emacs-lisp
       (setq gnus-parameters
-            '(("^nnrss:"
+            '(("^\\(nnrss:\\|nntp\\+gwene:\\)"
                (gnus-show-threads nil)
                (mm-discouraged-alternatives nil)
                (gnus-summary-line-format (concat "%U%R %* "
@@ -43,7 +43,7 @@ use with gnus.
 #+end_src
 
 ** Using local LDAP for email address autocompletion (when we are in CS dept.)
-*** LDAP access parameters
+*** LDAP access parametersa
     #+begin_src emacs-lisp
       (setq ldap-host-parameters-alist '(("ldap.cs.prv" 
                                           base "dc=cs,dc=karelia,dc=ru")))
@@ -185,7 +185,7 @@ use with gnus.
 * Autocheck using Gnus demon
    #+begin_src emacs-lisp
      (defun gnus-autocheck()
-       (gnus-demon-add-handler 'gnus-demon-scan-news 3 nil))
+       (gnus-demon-add-handler 'gnus-demon-scan-news 15 nil))
      
      (add-hook 'gnus-started-hook 'gnus-autocheck)
    #+end_src

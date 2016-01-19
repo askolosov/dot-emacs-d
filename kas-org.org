@@ -11,6 +11,24 @@ GTD system or tool for reproducible research and literate programming.
 For more information on org-mode check out [[http://orgmode.org/worg/][worg]], a large Org-mode wiki
 which is also *implemented using* Org-mode and [[http://git-scm.com/][git]].
 
+* Misc
+
+Use IDO in org-mode completions:
+#+begin_src emacs-lisp
+  (setq org-completion-use-ido t)
+#+end_src
+
+Save all agenda org-files every hour:
+#+begin_src emacs-lisp
+  (run-at-time "00:59" 3600 'org-save-all-org-buffers)
+#+end_src
+
+Using the org-protocol extension to give external applications an
+interface to communicate with the current Org instance:
+#+begin_src emacs-lisp
+  (require 'org-protocol)
+#+end_src
+
 * Org-Mode Hook -- Keybindings
    :PROPERTIES:
    :CUSTOM_ID: keybindings
@@ -199,8 +217,10 @@ Capture templates:
         (quote (("t" "todo" entry (file "")
                  "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
                 ("r" "respond" entry (file "")
-                 "* TODO Respond to %:from on %:subject\nSCHEDULED:
-                 %t\n%U\n%a\n" :immediate-finish t)))) ;; :clock-in t :clock-resume t
+                 "* TODO Ответить %:from на тему '%:subject'\nSCHEDULED:
+                   %t\n%U\n%a\n" :immediate-finish t) ;; :clock-in t :clock-resume t
+                ("w" "org-protocol" entry (file "")
+                 "* TODO Рассмотреть %c\n%U\n" :immediate-finish t))))
 #+end_src
 * Refile setup
 #+begin_src emacs-lisp   
@@ -218,15 +238,4 @@ Capture templates:
   (setq org-refile-allow-creating-parent-nodes (quote confirm))
 #+end_src
 
-* Misc
 
-Use IDO in org-mode completions:
-
-#+begin_src emacs-lisp
-  (setq org-completion-use-ido t)
-#+end_src
-
-Save all agenda org-files every hour:
-#+begin_src emacs-lisp
-  (run-at-time "00:59" 3600 'org-save-all-org-buffers)
-#+end_src

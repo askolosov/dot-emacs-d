@@ -114,8 +114,8 @@ file using the `org-babel-lob-ingest' function.
 
   When I clock-in a task, the timer starts with the default unless a timer is already underway:
   #+begin_src emacs-lisp
-    (add-hook 'org-clock-in-hook' (lambda () 
-                                    (org-timer-set-timer '(16))))
+    ;; (add-hook 'org-clock-in-hook' (lambda () 
+    ;;                                 (org-timer-set-timer '(16))))
   #+end_src
 
 * Clean view
@@ -179,13 +179,54 @@ Switch on Org-babel Clojure support.
 #+end_src
 * List of my Agenda org-files
 #+begin_src emacs-lisp 
-  (setq org-agenda-files (list "~/org/cs.org"
-                               "~/org/teaching.org"
-                               "~/org/nest.org"
-                               ;; "~/org/moonlighting.org"
-                               "~/org/memos.org"
-                               "~/org/researches.org"
-                               "~/org/home.org"))
-
+  (setq org-agenda-files (list "~/org/"))
 #+end_src
    
+* Capture mode
+
+Default locations for new captures:
+
+#+begin_src emacs-lisp 
+  (setq org-directory "~/org")
+  (setq org-default-notes-file "~/org/refile.org")
+#+end_src
+
+Capture templates:
+
+#+begin_src emacs-lisp 
+  ;; Capture templates for: TODO tasks, Notes, appointments, phone calls, meetings, and org-protocol
+  (setq org-capture-templates
+        (quote (("t" "todo" entry (file "")
+                 "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
+                ("r" "respond" entry (file "")
+                 "* TODO Respond to %:from on %:subject\nSCHEDULED:
+                 %t\n%U\n%a\n" :immediate-finish t)))) ;; :clock-in t :clock-resume t
+#+end_src
+* Refile setup
+#+begin_src emacs-lisp   
+  ; Targets include this file and any file contributing to the agenda - up to 9 levels deep
+  (setq org-refile-targets (quote ((nil :maxlevel . 9)
+                                   (org-agenda-files :maxlevel . 9))))
+
+  ; Use full outline paths for refile targets - we file directly with IDO
+  (setq org-refile-use-outline-path t)
+
+  ; Targets complete directly with IDO
+  (setq org-outline-path-complete-in-steps nil)
+
+  ; Allow refile to create parent tasks with confirmation
+  (setq org-refile-allow-creating-parent-nodes (quote confirm))
+#+end_src
+
+* Misc
+
+Use IDO in org-mode completions:
+
+#+begin_src emacs-lisp
+  (setq org-completion-use-ido t)
+#+end_src
+
+Save all agenda org-files every hour:
+#+begin_src emacs-lisp
+  (run-at-time "00:59" 3600 'org-save-all-org-buffers)
+#+end_src

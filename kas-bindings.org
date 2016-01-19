@@ -99,6 +99,11 @@ globally for later insertion into an Org-mode buffer.  See
   (define-key global-map "\C-cl" 'org-store-link)
 #+end_src
 
+Org Capture mode replaces remember mode for capturing tasks and notes.
+#+begin_src emacs-lisp
+  (define-key global-map "\C-cc" 'org-capture)
+#+end_src
+
 ** Rgrep
 Rgrep is infinitely useful in multi-file projects.
 

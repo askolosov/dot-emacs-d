@@ -65,6 +65,16 @@ display a list of the code blocks commands and their related keys.
   (setq org-use-speed-commands t)
 #+end_src
 
+* Task states
+
+Trying to use task lifecycle described in [[http://doc.norang.ca/org-mode.html#TodoKeywords]]
+
+#+begin_src emacs-lisp
+  (setq org-todo-keywords
+        (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+                (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
+#+end_src
+
 * Code blocks
    :PROPERTIES:
    :CUSTOM_ID: babel
@@ -339,7 +349,7 @@ Capture templates:
                  "* TODO Ответить %:from на тему '%:subject'\nSCHEDULED:
                    %t\n%U\n%a\n" :immediate-finish t) ;; :clock-in t :clock-resume t
                 ("w" "org-protocol" entry (file "")
-                 "* TODO Рассмотреть %c\n%U\n" :immediate-finish t))))
+                 "* TODO Глянуть %c\n%U\n" :immediate-finish t))))
 #+end_src
 * Refile setup
 #+begin_src emacs-lisp   

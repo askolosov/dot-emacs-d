@@ -248,6 +248,14 @@ Always hilight the current agenda line
             'append)
 #+end_src
 
+
+For tag searches ignore tasks with scheduled and deadline dates if
+such behaviour is specified in the agenda template
+#+begin_src emacs-lisp 
+  (org-agenda-tags-todo-honor-ignore-options t)
+#+end_src
+
+
 Helper functions for agenda templates (from
 [[http://doc.norang.ca/org-mode.html]])
 #+begin_src emacs-lisp 
@@ -663,7 +671,7 @@ Agenda templates:
                               (org-agenda-todo-ignore-deadlines bh/hide-scheduled-and-waiting-next-tasks)
                               (org-agenda-todo-ignore-with-date bh/hide-scheduled-and-waiting-next-tasks)
                               (org-agenda-sorting-strategy
-                               '(category-keep))))
+                               '(category-keep priority-down))))
                   (tags-todo "-CANCELLED+WAITING|HOLD/!"
                              ((org-agenda-overriding-header (concat "Waiting and Postponed Tasks"
                                                                     (if bh/hide-scheduled-and-waiting-next-tasks

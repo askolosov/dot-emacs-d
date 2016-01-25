@@ -28,6 +28,7 @@ interface to communicate with the current Org instance:
 #+begin_src emacs-lisp
   (require 'org-protocol)
   (require 'org-habit)
+  (require 'org-checklist)
 #+end_src
 
 * Org-Mode Hook -- Keybindings
@@ -252,7 +253,7 @@ Always hilight the current agenda line
 For tag searches ignore tasks with scheduled and deadline dates if
 such behaviour is specified in the agenda template
 #+begin_src emacs-lisp 
-  (org-agenda-tags-todo-honor-ignore-options t)
+  (setq org-agenda-tags-todo-honor-ignore-options t)
 #+end_src
 
 

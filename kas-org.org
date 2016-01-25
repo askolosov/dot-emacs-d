@@ -85,15 +85,15 @@ How logging and clocking entries will be shown in the task
 #+end_src
 
 #+begin_src emacs-lisp
-  (setq org-todo-keyword-faces
-        (quote (("TODO" 'org-todo)
-                ("NEXT" :foreground "sky blue")
-                ("DONE" 'org-done)
-                ("WAITING" :foreground "orange")
-                ("HOLD" :foreground "magenta3")
-                ("CANCELLED" 'org-done)
-                ("MEETING" :foreground "white")
-                ("PHONE" :foreground "white"))))
+  (setq org-todo-keyword-faces 
+        '(("TODO" org-todo)
+          ("NEXT" :foreground "sky blue")
+          ("DONE" org-done)
+          ("WAITING" :foreground "orange")
+          ("HOLD" :foreground "magenta3")
+          ("CANCELLED" org-done)
+          ("MEETING" :foreground "white")
+          ("PHONE" :foreground "white")))
 #+end_src
 
 

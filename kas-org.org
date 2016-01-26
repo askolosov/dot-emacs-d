@@ -88,7 +88,7 @@ How logging and clocking entries will be shown in the task
 #+begin_src emacs-lisp
   (setq org-todo-keyword-faces 
         '(("TODO" org-todo)
-          ("NEXT" :foreground "sky blue")
+          ("NEXT" :foreground "DeepSkyBlue")
           ("DONE" org-done)
           ("WAITING" :foreground "orange")
           ("HOLD" :foreground "magenta3")

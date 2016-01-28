@@ -704,14 +704,13 @@ Capture templates:
   ;; Capture templates for: TODO tasks, Notes, appointments, phone calls, meetings, and org-protocol
   (setq org-capture-templates
         (quote (("t" "todo" entry (file "")
-                 "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)              
+                 "* TODO %?\n  %U\n  %a\n" :clock-in t :clock-resume t)              
                 ("r" "respond" entry (file "")
-                 "* TODO Ответить %:from на тему '%:subject'\nSCHEDULED:
-                   %t\n%U\n%a\n" :immediate-finish t) ;; :clock-in t :clock-resume t
+                 "* NEXT Ответить %:from на тему '%:subject'\n  SCHEDULED: %t\n  %U\n  %a\n" :clock-in t :clock-resume t :immediate-finish t)
                 ("w" "org-protocol" entry (file "")
-                 "* TODO Глянуть %c\n%U\n" :immediate-finish t)
+                 "* TODO Глянуть %c\n  %U\n" :immediate-finish t)
                 ("j" "Journal" entry (file+datetree "~/org/diary.org")
-                 "* %?\n%U\n" :clock-in t :clock-resume t))))
+                 "* %?\n  %U\n" :clock-in t :clock-resume t))))
 #+end_src
 * Refile setup
 #+begin_src emacs-lisp   

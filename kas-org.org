@@ -616,7 +616,7 @@ Helper functions for agenda templates (from
 Agenda templates:
 #+begin_src emacs-lisp 
   (setq org-agenda-custom-commands
-        (quote (("N" "Notes" tags "NOTE"
+        (quote (("N" "Notes" tags "note"
                  ((org-agenda-overriding-header "Notes")
                   (org-tags-match-list-sublevels t)))
                 ("h" "Habits" tags-todo "STYLE=\"habit\""
@@ -706,11 +706,13 @@ Capture templates:
         (quote (("t" "todo" entry (file "")
                  "* TODO %?\n  %U\n  %a\n" :clock-in t :clock-resume t)              
                 ("r" "respond" entry (file "")
-                 "* NEXT Ответить %:from на тему '%:subject'\n  SCHEDULED: %t\n  %U\n  %a\n" :clock-in t :clock-resume t :immediate-finish t)
+                 "* NEXT Ответить %:from на тему '%:subject' :email:\n  SCHEDULED: %t\n  %U\n  %a\n" :clock-in t :clock-resume t :immediate-finish t)
                 ("w" "org-protocol" entry (file "")
-                 "* TODO Глянуть %c\n  %U\n" :immediate-finish t)
+                 "* TODO Глянуть %c :web:\n  %U\n" :immediate-finish t)
                 ("j" "Journal" entry (file+datetree "~/org/diary.org")
-                 "* %?\n  %U\n" :clock-in t :clock-resume t))))
+                 "* %?\n  %U\n" :clock-in t :clock-resume t)
+                ("n" "note" entry (file "")
+                 "* %? :note:\n%U\n%a\n" :clock-in t :clock-resume t))))
 #+end_src
 * Refile setup
 #+begin_src emacs-lisp   

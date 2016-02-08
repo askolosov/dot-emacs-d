@@ -81,6 +81,12 @@
       (add-to-list 'gnus-secondary-select-methods '(nntp "gwene"
                                                          (nntp-address "news.gwene.org")))
     #+end_src
+** Gmane
+    #+begin_src emacs-lisp 
+      (add-to-list 'gnus-secondary-select-methods '(nntp "gmane"
+                                                         (nntp-address "news.gmane.org")))
+    #+end_src
+
 ** Sent-mail
     - Using remote IMAP foler for sent mail:
       #+begin_src emacs-lisp

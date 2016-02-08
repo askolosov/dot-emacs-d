@@ -288,3 +288,9 @@ After we've loaded all the Starter Kit defaults, lets load the User's stuff.
 #+begin_src emacs-lisp 
   (tool-bar-mode 0)
 #+end_src
+** rcirc
+   #+begin_src emacs-lisp 
+     (setq rcirc-server-alist
+           '(("irc.freenode.net" :port 6697 :encryption tls :nick "wkas"
+              :channels ("#emacs"))))
+   #+end_src

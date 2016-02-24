@@ -256,6 +256,11 @@ such behaviour is specified in the agenda template
   (setq org-agenda-tags-todo-honor-ignore-options t)
 #+end_src
 
+Agenda clock report parameters
+#+begin_src emacs-lisp 
+  (setq org-agenda-clockreport-parameter-plist
+        (quote (:link t :maxlevel 5 :fileskip0 t :level nil :tcolumns 1 :narrow 60 :indent t)))
+#+end_src
 
 Helper functions for agenda templates (from
 [[http://doc.norang.ca/org-mode.html]])
@@ -616,7 +621,11 @@ Helper functions for agenda templates (from
 Agenda templates:
 #+begin_src emacs-lisp 
   (setq org-agenda-custom-commands
-        (quote (("N" "Notes" tags "note"
+        (quote (("p" "Timetable for Planning" agenda ""
+                 ((org-deadline-warning-days 0)
+                  (org-agenda-tag-filter-preset 'nil)
+                  (org-agenda-span 'week)))
+                ("N" "Notes" tags "note"
                  ((org-agenda-overriding-header "Notes")
                   (org-tags-match-list-sublevels t)))
                 ("h" "Habits" tags-todo "STYLE=\"habit\""

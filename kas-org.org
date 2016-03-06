@@ -653,12 +653,12 @@ Agenda templates:
                     (tags "REFILE"
                           ((org-agenda-overriding-header "Tasks to Refile")
                            (org-tags-match-list-sublevels nil)))
-                    (tags "project|TODO={.}-CANCELLED/-DONE"
+                    (tags "project-CANCELLED|TODO={.}-CANCELLED/-DONE"
                                ((org-agenda-overriding-header "Stuck Projects")
                                 (org-agenda-skip-function 'bh/skip-non-stuck-projects)
                                 (org-agenda-sorting-strategy
                                  '(category-keep))))
-                    (tags "project|TODO={.}-HOLD-CANCELLED"
+                    (tags "project-HOLD-CANCELLED|TODO={.}-HOLD-CANCELLED"
                           ((org-agenda-overriding-header "Projects")
                            (org-agenda-skip-function 'bh/skip-non-projects)
                            (org-tags-match-list-sublevels 'indented)
@@ -677,7 +677,7 @@ Agenda templates:
                                 (org-agenda-sorting-strategy
                                  '(todo-state-down effort-up category-keep))))
   ;;                  (tags-todo "-REFILE-CANCELLED-WAITING-HOLD/!"
-                    (tags "project|TODO={.}-REFILE-CANCELLED-WAITING-HOLD/-DONE-CANCELLED-WAITING-HOLD"
+                    (tags "project-CANCELLED-WAITING-HOLD|TODO={.}-REFILE-CANCELLED-WAITING-HOLD/-DONE-CANCELLED-WAITING-HOLD-MEETING"
                                ((org-agenda-overriding-header (concat "Project Subtasks"
                                                                       (if bh/hide-scheduled-and-waiting-next-tasks
                                                                           ""

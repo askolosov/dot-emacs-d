@@ -169,6 +169,11 @@ file using the `org-babel-lob-ingest' function.
     ;;                                 (org-timer-set-timer '(16))))
   #+end_src
 
+  Show lot of clocking history by =C-u C-c C-x C-i=
+  #+begin_src emacs-lisp
+    (setq org-clock-history-length 23)
+  #+end_src
+
 * Clean view
   #+begin_src emacs-lisp
     (setq org-hide-leading-stars t)

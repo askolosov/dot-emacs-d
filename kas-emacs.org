@@ -211,6 +211,26 @@ After we've loaded all the Starter Kit defaults, lets load the User's stuff.
   (load custom-file 'noerror)
 #+end_src
 
+** Useful functions
+#+begin_src emacs-lisp
+  (defun kas/x-urgency-hint (frame set &optional source)
+    "Set urgency hint for `frame' to `set' for `source'."
+    (let* ((wm-hints (append (x-window-property
+                              "WM_HINTS" frame "WM_HINTS"
+                              (if source
+                                  source
+                                (string-to-number
+                                 (frame-parameter frame 'outer-window-id)))
+                              nil t)
+                             nil))
+           (flags (car wm-hints)))
+      (setcar wm-hints
+              (if set
+                  (logior flags #x00000100)
+                (logand flags #xFFFFFEFF)))
+      (x-change-window-property "WM_HINTS" wm-hints frame "WM_HINTS" 32 t)))
+#+end_src
+
 ** Calendar settings
     #+begin_src emacs-lisp
       (setq calendar-date-style 'european)
@@ -283,10 +303,15 @@ After we've loaded all the Starter Kit defaults, lets load the User's stuff.
   #+end_src
 
 ** Look'n'Feel customizations
-*** Tool bar is needless
+*** Tool bar and menu bar are needless
     It might also be set in .Xdefaults using Emacs.toolBar: 0
 #+begin_src emacs-lisp 
   (tool-bar-mode 0)
+  (menu-bar-mode 0)
+#+end_src
+*** Highlight the desktop where file was opened by emacsclient
+#+begin_src elisp
+  (add-hook 'server-visit-hook '(lambda () (kas/x-urgency-hint (selected-frame) t)))
 #+end_src
 ** rcirc
    #+begin_src emacs-lisp 

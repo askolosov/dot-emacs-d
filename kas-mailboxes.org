@@ -60,7 +60,6 @@
                                         (nnimap-server-port 993)
                                         (nnimap-stream ssl)))
     #+end_src
-    
 ** GMail
     #+begin_src emacs-lisp 
       ;; (add-to-list 'gnus-secondary-select-methods '(nnimap "gmail"

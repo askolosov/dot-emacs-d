@@ -25,6 +25,7 @@ This Emacs config is based on the Emacs Starter Kit (http://github.com/eschulte/
   #+name: starter-kit-load-paths
   #+begin_src emacs-lisp
     (add-to-list 'load-path starter-kit-dir)
+    (add-to-list 'load-path "~/.local/share/emacs/site-lisp")
     (setq autoload-file (concat starter-kit-dir "loaddefs.el"))
     (setq package-user-dir (concat starter-kit-dir "elpa"))
     (setq custom-file (concat starter-kit-dir "custom.el"))

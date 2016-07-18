@@ -298,6 +298,10 @@ After we've loaded all the Starter Kit defaults, lets load the User's stuff.
   #+begin_src emacs-lisp
     (starter-kit-load "kas-gnus.org")
   #+end_src
+** Notmuch mail client settings
+  #+begin_src emacs-lisp
+    (starter-kit-load "kas-notmuch.org")
+  #+end_src
 
 ** Comfortable Javascript coding
   #+begin_src emacs-lisp

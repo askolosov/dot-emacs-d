@@ -73,3 +73,13 @@
      ;; Verify signed mime messages
      (setq notmuch-crypto-process-mime t)
    #+end_src
+* Sending mail
+#+begin_src emacs-lisp
+  (add-hook 'message-header-setup-hook
+            (lambda ()
+              (let ((from (mail-fetch-field "From")))
+                (when (string-match-p "alexander@kolosov\\.xyz" from)
+                  (save-excursion
+                    (insert "X-SMTP-Server: mail.kolosov.xyz\n")
+                    (insert "X-SMTP-Service: 587\n"))))))
+#+end_src

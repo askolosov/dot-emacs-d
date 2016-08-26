@@ -55,7 +55,7 @@ This Emacs config is based on the Emacs Starter Kit (http://github.com/eschulte/
     (package-initialize)
 
     (defvar starter-kit-packages
-      (list 'yasnippet-bundle)
+      (list 'yasnippet-bundle 'dired-narrow 'pdf-tools)
       "Libraries that should be installed by default.")
 
     (unless package-archive-contents
@@ -328,5 +328,11 @@ After we've loaded all the Starter Kit defaults, lets load the User's stuff.
 ** Load pdf-tools
    #+begin_src emacs-lisp
      (pdf-tools-install)
+   #+end_src
+   
+** Dired tweaks
+   #+begin_src emacs-lisp
+     (define-key dired-mode-map "/"
+                          'dired-narrow)
    #+end_src
    

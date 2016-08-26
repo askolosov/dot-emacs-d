@@ -2,6 +2,8 @@
 * Initialization
 #+begin_src emacs-lisp
   (require 'notmuch)
+
+  (require 'org-notmuch)
 #+end_src
 
 * Remote notmuch
@@ -34,6 +36,7 @@
         '((:name "inbox" :query "tag:inbox" :key "i"  :count-query "tag:inbox AND tag:unread")
           (:name "inbox cs" :query "tag:cs and tag:inbox" :key "c")
           (:name "inbox xyz" :query "tag:xyz and tag:inbox" :key "x")
+          (:name "researches" :query "tag:rsc" :key "R")
           (:name "flagged" :query "tag:flagged" :key "f")
           (:name "drafts" :query "tag:draft" :key "d")
           (:name "reports" :query "tag:report" :key "r" :count-query "tag:report AND tag:unread")

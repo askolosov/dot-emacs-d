@@ -721,6 +721,18 @@ Agenda templates:
                    nil))))
 #+end_src
 
+#+begin_src emacs-lisp 
+  (defun org-my-auto-exclude-function (tag)
+    (if (and (getenv "CS_PETRSU")
+             (or (string= tag "moonlightning")
+                 (string= tag "personal3")))
+        (concat "-" tag)
+      nil))
+  
+  (setq org-agenda-auto-exclude-function 'org-my-auto-exclude-function)
+#+end_src
+
+
 * Capture mode
 
 Default locations for new captures:

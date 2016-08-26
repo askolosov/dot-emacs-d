@@ -18,3 +18,4 @@
     (org-babel-load-file (expand-file-name "kas-emacs.org" starter-kit-dir))))
 
 ;;; init.el ends here
+(put 'dired-find-alternate-file 'disabled nil)

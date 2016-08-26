@@ -19,9 +19,8 @@
       (progn
         (setq notmuch-fcc-dirs nil)
         (add-hook 'message-header-setup-hook
-                  (lambda () (insert (format "Bcc: %s <%s>\n"
-                                             (notmuch-user-name)
-                                             "akolosov@cs.petrsu.ru")))))
+                  (lambda () (insert (format "Bcc: %s\n"
+                                             (mail-fetch-field "From"))))))
     (setq notmuch-fcc-dirs
           '(("akolosov@cs.petrsu.ru" . "cs/sent-mail")
             ("akolosov@cs.karelia.ru" . "cs/sent-mail")
@@ -80,12 +79,53 @@
      (setq notmuch-crypto-process-mime t)
    #+end_src
 * Sending mail
-#+begin_src emacs-lisp
-  (add-hook 'message-header-setup-hook
-            (lambda ()
-              (let ((from (mail-fetch-field "From")))
-                (when (string-match-p "alexander@kolosov\\.xyz" from)
-                  (save-excursion
-                    (insert "X-SMTP-Server: mail.kolosov.xyz\n")
-                    (insert "X-SMTP-Service: 587\n"))))))
-#+end_src
+
+  Use `smtpmail` to send email via SMTP.
+  
+  #+begin_src emacs-lisp  
+    (require 'smtpmail)
+
+    (setq send-mail-function 'smtpmail-send-it)
+    (setq message-send-mail-function 'smtpmail-send-it) ; if you use message/Gnus
+  #+end_src
+
+  Choose SMTP-server on the basis of =X-SMTP-Server= header, which is
+  set on posting styles. In the absence of the header use default SMTP
+  server.
+
+  #+begin_src emacs-lisp
+    (eval-after-load "smtpmail"
+      '(progn
+         (defadvice smtpmail-via-smtp (around set-smtp-server-from-header activate)
+           (let ((smtpmail-smtp-server (or 
+                                        (save-restriction
+                                          (message-narrow-to-headers)
+                                          (mail-fetch-field "X-SMTP-Server"))
+                                        smtpmail-default-smtp-server))
+                 (smtpmail-smtp-service (or 
+                                         (save-restriction
+                                           (message-narrow-to-headers)
+                                           (mail-fetch-field "X-SMTP-Service"))
+                                         25)))
+             (message-remove-header "X-SMTP-Server")
+             (message-remove-header "X-SMTP-Service")
+             ad-do-it
+             ))))
+  #+end_src
+
+  #+begin_src emacs-lisp
+    (setq smtpmail-default-smtp-server "mail.cs.karelia.ru")
+    (setq smtpservers-alist '(("@kolosov\\.xyz" . ("mail.kolosov.xyz" 587))
+                              ("@cs\\.\\(petrsu\\|karelia\\)\\.ru" . ("mail.cs.karelia.ru" 25))))
+
+    (add-hook 'message-header-setup-hook
+              (lambda ()
+                (let* ((from (mail-fetch-field "From"))
+                       (mailserver-pair (assoc-default from smtpservers-alist 'string-match-p))
+                       (server (car mailserver-pair))
+                       (service (car (cdr mailserver-pair))))
+                  (when mailserver-pair
+                    (save-excursion
+                      (insert (format "X-SMTP-Server: %s\n" server))
+                      (insert (format "X-SMTP-Service: %d\n" service)))))))
+  #+end_src

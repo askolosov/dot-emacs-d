@@ -325,3 +325,8 @@ After we've loaded all the Starter Kit defaults, lets load the User's stuff.
            '(("irc.freenode.net" :port 6697 :encryption tls :nick "wkas"
               :channels ("#emacs"))))
    #+end_src
+** Load pdf-tools
+   #+begin_src emacs-lisp
+     (pdf-tools-install)
+   #+end_src
+   

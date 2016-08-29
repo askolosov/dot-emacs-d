@@ -725,7 +725,7 @@ Agenda templates:
   (defun org-my-auto-exclude-function (tag)
     (if (and (getenv "CS_PETRSU")
              (or (string= tag "moonlightning")
-                 (string= tag "personal3")))
+                 (string= tag "personal")))
         (concat "-" tag)
       nil))
   

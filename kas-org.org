@@ -786,3 +786,7 @@ Capture templates:
   ; GPG key to use for encryption
   (setq org-crypt-key "3272CE4C")
 #+end_src
+* Using Reveal.js exporter
+  #+begin_src emacs-lisp
+    (require 'ox-reveal)
+  #+end_src
